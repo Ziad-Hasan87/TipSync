@@ -56,6 +56,12 @@ body {
 .key-empty {
   @apply inline-block w-[4.1rem] h-[4.1rem] m-2; /* same size & margin as key-border */
 }
+.navigation-button {
+  @apply text-white bg-indigo-900 py-3 px-3 rounded;
+  @apply hover:bg-red-700;
+  @apply active:bg-indigo-500;
+  @apply transition-colors duration-200;
+}
 @keyframes drop {
   0% {
     transform: translateY(0);

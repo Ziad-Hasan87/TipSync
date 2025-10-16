@@ -111,7 +111,7 @@ export default function GameSync() {
     }
 
     return (
-        <Layout>
+        <Layout gamePage = {true} loginPage={false} leaderboardsPage={false} username="">
             <div
                 className="relative"
                 style={{ height: "calc(100vh - 4rem)" }}

@@ -1,10 +1,58 @@
 // components/Header.tsx
 import React from "react";
 
-export default function Header() {
+export default function Header({
+  gamePage,
+  loginPage,
+  leaderboardsPage,
+  username,
+}: {
+  gamePage?: boolean;
+  loginPage?: boolean;
+  leaderboardsPage?: boolean;
+  username?: string;
+}) {
   return (
-    <header className="h-16 bg-[rgba(0,0,30,70)] flex items-center justify-left">
-        <h1 className="h-full pl-2 pr-2 ml-5 orbitron-regular bg-[wheat] text-3xl text-[black] flex items-center justify-center">TipSync</h1>
+    <header className="h-16 bg-[rgba(0,0,30,0.7)] flex items-center justify-between px-5">
+      {/* Logo */}
+      <h1 className="h-full pl-2 pr-2 orbitron-regular bg-[wheat] text-3xl text-[black] flex items-center justify-center">
+        TipSync
+      </h1>
+
+      {/* Navigation buttons */}
+      <div className="flex gap-4">
+        {!gamePage &&
+            <button
+                className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-white-700 active:bg-white-900"
+                onClick={()=> window.location.href = "/gamesync"}
+            >
+                Play Now!
+            </button>
+        }
+        <button
+          className={`text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer
+            ${
+              loginPage
+                ? "bg-indigo-500 hover:bg-white-700 active:bg-white-900"
+                : "bg-indigo-900 hover:bg-white-700 active:bg-indigo-500"
+            }`}
+            onClick={() => window.location.href = "/login"}
+        >
+          Login
+        </button>
+
+        <button
+          className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
+        >
+          Profile
+        </button>
+
+        <button
+          className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
+        >
+          Leaderboards
+        </button>
+      </div>
     </header>
   );
 }
