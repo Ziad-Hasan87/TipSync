@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Iceberg&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
+
+@import "tailwindcss";
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.orbitron-regular {
+  font-family: "Orbitron", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+html,
+body {
+  @apply bg-white dark:bg-gray-950;
+}
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    color-scheme: dark;
+  }
+}
+.key-border {
+  @apply relative inline-block w-[4.1rem] h-[4.1rem] shadow-[inset_-4px_-4px_8px_rgba(255,255,255,0.1),inset_4px_4px_8px_rgba(0,0,0,0.5),6px_6px_12px_rgba(0,0,0,0.7)] overflow-hidden m-2 rounded-[10px];
+  background: #222;
+}
+.key-border-hit {
+  @apply inline-block items-center content-center justify-center relative w-[4.1rem] h-[4.1rem] overflow-hidden m-2 rounded-[10px];
+  background: green;
+}
+.key-border-miss {
+  @apply inline-block items-center content-center justify-center relative inline-block w-[4.1rem] h-[4.1rem] overflow-hidden m-2 rounded-[10px];
+  background: red;
+}
+.key-button {
+  @apply absolute w-14 h-14 text-[white] shadow-[-10px_-10px_10px_rgba(255,255,255,0.25),10px_5px_10px_rgba(0,0,0,0.5)] rounded-[10px] border-r-[3px] border-b-[3px] border-l border-solid border-[black] border-t inset-[3px];
+  background: linear-gradient(180deg, #232323, #4a4a4a);
+}
+.key-border-hit .key-button {
+  @apply absolute -translate-x-2/4 -translate-y-2/4 left-2/4 right-auto top-2/4 bottom-auto;
+}
+.key-border-miss .key-button {
+  @apply absolute -translate-x-2/4 -translate-y-2/4 left-2/4 right-auto top-2/4 bottom-auto;
+}
+.keyboard-container {
+  @apply bg-[wheat] h-fit flex flex-row items-center justify-center relative top-[65%];
+}
+.keyboard {
+  @apply flex relative h-screen w-screen flex-row justify-center gap-0;
+}
+.key-empty {
+  @apply inline-block w-[4.1rem] h-[4.1rem] m-2; /* same size & margin as key-border */
+}
+@keyframes drop {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4.1rem); /* same as key height + margin */
+  }
+}
+.key-drop {
+  @apply transition-transform duration-300 ease-in-out;
+}
+@media (max-width: 768px) {
+  .key-empty {
+    @apply w-12 h-12 m-[0.3rem];
+  }
+  .key-border {
+    @apply w-12 h-12 m-[0.3rem];
+  }
+  .key-border-hit {
+    @apply w-12 h-12 m-[0.3rem];
+  }
+  .key-border-miss {
+    @apply w-12 h-12 m-[0.3rem];
+  }
+  .key-button {
+    @apply w-10 h-10;
+  }
+}
