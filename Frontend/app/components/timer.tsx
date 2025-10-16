@@ -1,8 +1,9 @@
 import React from "react";
 
-export default function Timer({ status }: { status: "playing" | "afk" }) {
+export default function Timer({ status, onTimeout, }: { status: "playing" | "afk", onTimeout?: () => void }) {
     const [seconds, setSeconds] = React.useState(0);
     const [milliseconds, setMilliseconds] = React.useState(0);
+    const [timeout, setTimeoutState] = React.useState(false);
 
     React.useEffect(() => {
         if (status !== "playing" || seconds >= 60) return;
@@ -23,8 +24,10 @@ export default function Timer({ status }: { status: "playing" | "afk" }) {
     React.useEffect(() => {
         if (seconds >= 60) {
             setMilliseconds(0);
+            setTimeoutState(true);
+            if(onTimeout) onTimeout();
         }
-    }, [seconds]);
+    }, [seconds, onTimeout]);
 
     return (
         <div>
