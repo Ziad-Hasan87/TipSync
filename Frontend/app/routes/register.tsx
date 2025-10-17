@@ -1,22 +1,42 @@
 import Layout from "~/components/layout";
+import toast from "react-hot-toast";
+
 
 export default function Register() {
-    function initiateRegister(event: React.FormEvent<HTMLFormElement>) {
+    async function initiateRegister(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault(); // prevent page reload
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email")?.toString() || "";
         const password = formData.get("password")?.toString() || "";
 
         if (!email || !password) {
-            alert("Please fill in both email and password.");
+            toast.error("Please fill in both email and password.");
             return;
         }
-        
+        try {
+            const res = await fetch("http://127.0.0.1:8000/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                toast.success(data.message);
+                window.location.href = "/login";
+            } else {
+                toast.error("Registration failed. Please try again.");
+            }
+
+        } catch (error) {
+            
+        }
         console.log("Register initiated with:", { email, password });
     }
 
     return (
-        <Layout gamePage={false} loginPage={true} leaderboardsPage={false} username="">
+        <Layout gamePage={false} loginPage={true} leaderboardsPage={false} profilePage={false}>
             <div
                 className="relative"
                 style={{ height: "calc(100vh - 4rem)" }}

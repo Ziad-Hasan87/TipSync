@@ -1,22 +1,40 @@
+import toast from "react-hot-toast";
 import Layout from "~/components/layout";
 
 export default function Login() {
-    function initiateLogin(event: React.FormEvent<HTMLFormElement>) {
+    async function initiateLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault(); // prevent page reload
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email")?.toString() || "";
         const password = formData.get("password")?.toString() || "";
 
         if (!email || !password) {
-            alert("Please fill in both email and password.");
+            toast.error("Please fill in both email and password.");
             return;
         }
-        
+        try {
+            const res = await fetch("http://127.0.0.1:8000/auth/login",{
+                method: "POST",
+                body: formData,
+            });
+            if (res.ok) {
+                const data = await res.json();
+                localStorage.setItem("access_token", data.access_token);
+                toast.success(data.message);
+                window.location.href = "/gamesync";
+            }
+            else {
+                toast.error("Login failed. Please check your credentials.");
+            }
+            
+        } catch (error) {
+            
+        }
         console.log("Login initiated with:", { email, password });
     }
 
     return (
-        <Layout gamePage={false} loginPage={true} leaderboardsPage={false} username="">
+        <Layout gamePage={false} loginPage={true} leaderboardsPage={false} profilePage={false}>
             <div
                 className="relative"
                 style={{ height: "calc(100vh - 4rem)" }}

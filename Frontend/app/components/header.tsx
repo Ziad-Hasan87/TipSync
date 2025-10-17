@@ -1,17 +1,19 @@
 // components/Header.tsx
 import React from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Header({
   gamePage,
   loginPage,
   leaderboardsPage,
-  username,
+  profilePage,
 }: {
   gamePage?: boolean;
   loginPage?: boolean;
   leaderboardsPage?: boolean;
-  username?: string;
+  profilePage?: boolean;
 }) {
+  const { user, logout } = useAuth();
   return (
     <header className="h-16 bg-[rgba(0,0,30,0.7)] flex items-center justify-between px-5">
       {/* Logo */}
@@ -21,31 +23,45 @@ export default function Header({
 
       {/* Navigation buttons */}
       <div className="flex gap-4">
-        {!gamePage &&
+        {!gamePage && (
+          <button
+            className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-white-700 active:bg-white-900"
+            onClick={() => (window.location.href = "/gamesync")}
+          >
+            Play Now!
+          </button>
+        )}
+
+        {/* Login / Logout */}
+        {user ? (
+          <>
+            <div className="text-white flex items-center gap-3 px-3">{user.email}</div>
             <button
-                className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-white-700 active:bg-white-900"
-                onClick={()=> window.location.href = "/gamesync"}
+              className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-red-500"
+              onClick={() => logout()}
             >
-                Play Now!
+              Logout
             </button>
-        }
-        <button
-          className={`text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer
+          </>
+        ) : (
+          <button
+            className={`text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer
             ${
               loginPage
                 ? "bg-indigo-500 hover:bg-white-700 active:bg-white-900"
                 : "bg-indigo-900 hover:bg-white-700 active:bg-indigo-500"
             }`}
-            onClick={() => window.location.href = "/login"}
-        >
-          Login
-        </button>
+            onClick={() => (window.location.href = "/login")}
+          >
+            Login
+          </button>
+        )}
 
-        <button
+        {user ? <button
           className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
         >
           Profile
-        </button>
+        </button> : null}
 
         <button
           className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
