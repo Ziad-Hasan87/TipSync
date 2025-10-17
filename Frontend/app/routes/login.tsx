@@ -11,7 +11,7 @@ export default function Login() {
             alert("Please fill in both email and password.");
             return;
         }
-
+        
         console.log("Login initiated with:", { email, password });
     }
 
