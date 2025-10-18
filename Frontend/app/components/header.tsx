@@ -23,7 +23,7 @@ export default function Header({
 
       {/* Navigation buttons */}
       <div className="flex gap-4">
-        {!gamePage && (
+        {gamePage && (
           <button
             className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-white-700 active:bg-white-900"
             onClick={() => (window.location.href = "/gamesync")}
@@ -57,17 +57,19 @@ export default function Header({
           </button>
         )}
 
-        {user ? <button
+        {user && profilePage ? <button
           className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
+          onClick={()=> (window.location.href = "/profile")}
         >
           Profile
         </button> : null}
 
-        <button
+        {leaderboardsPage && <button
           className="text-white bg-indigo-900 py-3 px-3 rounded hover:bg-indigo-700 active:bg-indigo-500 transition-colors duration-200 cursor-pointer"
+          onClick={()=> window.location.href=("/leaderboards")}
         >
           Leaderboards
-        </button>
+        </button>}
       </div>
     </header>
   );

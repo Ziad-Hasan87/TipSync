@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function GameOver({ score }: { score: number }) {
+  const hasSent = useRef(false);
+
   async function setScore() {
     const token = localStorage.getItem("access_token");
     const body = { score: score, accuracy: 100, game_mode: "speed" };
@@ -18,7 +20,7 @@ export default function GameOver({ score }: { score: number }) {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("✅ Score submitted:", data);
+        console.log("Score submitted:", data);
       } else {
         const err = await res.text();
         console.error("Failed to submit score:", err);
@@ -28,9 +30,11 @@ export default function GameOver({ score }: { score: number }) {
     }
   }
 
-  // Automatically send score when the component mounts
   useEffect(() => {
-    setScore();
+    if (!hasSent.current) {
+      hasSent.current = true;
+      setScore();
+    }
   }, []);
 
   return (
