@@ -26,7 +26,7 @@ export default function GameControl({
 
     return (
         <div className="w-full h-full">
-            <div className="absolute bottom-55 w-1/2 flex items-center justify-center p-4 shadow-md z-5">    
+            <div className="absolute bottom-55 w-1/2 flex items-center justify-center p-4 shadow-md z-10">    
                 <KeySequence keyrows={keyrows} />
             </div>
             <div className="absolute bottom-35 bg-[wheat] w-1/2 flex items-center justify-center z-50">
