@@ -1,13 +1,17 @@
 import KeyBoard from "./keyboard";
 import KeySequence from "./keySequence";
 import type { KeyRow } from "~/types/keys";
+import { type Easing, easeInOut } from "framer-motion";
+
 
 export default function GameControl({ 
     keys,
     keyrows, 
     name, 
     status,
-    sequence, 
+    sequence,
+    ease,
+    duration,
     onClicked
 }: { 
     keys: string[], 
@@ -15,6 +19,8 @@ export default function GameControl({
     name: string, 
     status: "playing" | "afk",
     sequence: number[], 
+    ease:boolean,
+    duration:number,
     onClicked?: (key: string, name: string) => void 
 }) {
 
@@ -27,7 +33,7 @@ export default function GameControl({
     return (
         <div className="w-full h-full">
             <div className="absolute bottom-55 w-1/2 flex items-center justify-center p-4 shadow-md z-10">    
-                <KeySequence keyrows={keyrows} />
+                <KeySequence duration={duration} keyrows={keyrows} />
             </div>
             <div className="absolute bottom-35 bg-[wheat] w-1/2 flex items-center justify-center z-50">
                 <KeyBoard keys={keys} onClicked={onClicked} name={name} />

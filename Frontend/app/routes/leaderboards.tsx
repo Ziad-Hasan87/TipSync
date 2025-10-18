@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "~/components/layout";
+import React from "react";
 
 interface LeaderboardEntry {
   id: number;
@@ -14,12 +15,13 @@ export default function Leaderboards() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedMode, setSelectedMode] = React.useState("speed");
 
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
         const res = await fetch(
-          "http://127.0.0.1:8000/scores/leaderboard?game_mode=speed",
+          "http://127.0.0.1:8000/scores/leaderboard?game_mode=" + selectedMode,
           {
             headers: {
               accept: "application/json",
@@ -41,7 +43,7 @@ export default function Leaderboards() {
     }
 
     fetchLeaderboard();
-  }, []);
+  }, [selectedMode]);
 
   return (
     <Layout
@@ -52,6 +54,34 @@ export default function Leaderboards() {
     >
       <div className="flex flex-col items-center justify-center h-full w-full p-8 text-white">
         <h1 className="text-3xl text-blue-500 mb-6">Leaderboard - Speed Mode</h1>
+        <div className="mb-6">
+          <label htmlFor="mode" className="mr-3 text-lg">
+            Choose Mode:
+          </label>
+          <select
+            id="mode"
+            value={selectedMode}
+            onChange={(e) => setSelectedMode(e.target.value as "speed" | "sync")}
+            className="p-2 rounded bg-blue-900 text-white border border-blue-400 focus:outline-none"
+          >
+            <option
+              className={`bg-blue-900 ${
+                selectedMode === "speed" ? "bg-blue-300" : "bg-blue-900"
+              }`}
+              value="speed"
+            >
+              Speed Mode
+            </option>
+            <option
+              className={`bg-blue-900 ${
+                selectedMode === "sync" ? "bg-blue-300" : "bg-blue-900"
+              }`}
+              value="sync"
+            >
+              Sync Mode
+            </option>
+          </select>
+        </div>
 
         {loading && <p className="text-gray-400">Loading leaderboard...</p>}
         {error && <p className="text-red-400">{error}</p>}
@@ -76,7 +106,7 @@ export default function Leaderboards() {
                   <td className="p-3">{index + 1}</td>
                   <td className="p-3 font-semibold text-amber-300">{entry.user_email}</td>
                   <td className="p-3">{entry.score}</td>
-                  <td className="p-3">{entry.accuracy}%</td>
+                  <td className="p-3">{entry.accuracy.toFixed(2)}%</td>
                   <td className="p-3">{new Date(entry.timestamp).toLocaleString()}</td>
                 </tr>
               ))}

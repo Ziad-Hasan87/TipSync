@@ -9,10 +9,7 @@ import { generateSequence } from "~/utils/sequenceGenerator";
 const rightKeys = ["j", "k", "l", ";"];
 const leftKeys = ["a", "s", "d", "f"];
 
-// keep a global counter so every KeyRow gets a unique index
 let rowCounter = 0;
-
-
 
 function keyRowsGenerator(sequence: number[], index: number): [KeyRow[], KeyRow[]] {
     const leftKeyRows: KeyRow[] = [];
@@ -34,118 +31,140 @@ function keyRowsGenerator(sequence: number[], index: number): [KeyRow[], KeyRow[
 
     return [leftKeyRows.reverse(), rightKeyRows.reverse()];
 }
+
 export default function GameSync() {
-    let sequence: number[] = React.useMemo(() => generateSequence(1000, 8), []);
+    const sequence: number[] = React.useMemo(() => generateSequence(1000, 8), []);
     const [score, setScore] = React.useState(0);
+    const [missCount, setMissCount] = React.useState(0);
     const [seqIdx, setSeqIndex] = React.useState(0);
     const [leftKeyRows, setLeftKeyRows] = React.useState<KeyRow[]>([]);
     const [rightKeyRows, setRightKeyRows] = React.useState<KeyRow[]>([]);
     const [status, setStatus] = React.useState<"playing" | "afk">("afk");
     const [showHint, setShowHint] = React.useState(true);
     const [gameOver, setGameOver] = React.useState(false);
+    const [tempo] = React.useState(90);
+    const unitTime = 60000 / tempo;
 
-    function handleTimeout() {
-        setStatus("afk"); // or whatever you want to do when the timer ends
-        console.log("Time is up!");
-        setGameOver(true);
+    const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
+    const currentKeyRef = React.useRef(0);
+    const hitRef = React.useRef(false);
+
+    // Create an Audio object for the metronome
+    const metronomeAudioRef = React.useRef<HTMLAudioElement | null>(null);
+    React.useEffect(() => {
+        metronomeAudioRef.current = new Audio("/sounds/metronome-click.wav"); // replace with your click sound path
+    }, []);
+
+    function playMetronome() {
+        if (metronomeAudioRef.current) {
+            metronomeAudioRef.current.currentTime = 0;
+            metronomeAudioRef.current.play().catch(() => {}); // ignore play errors
+        }
     }
 
-    function updateSequence(indx: number) {
-        const [leftRows, rightRows] = keyRowsGenerator(sequence, indx);
+    function handleTimeout() {
+        setStatus("afk");
+        setGameOver(true);
+        if (intervalRef.current) clearInterval(intervalRef.current);
+    }
+
+    function updateSequence(idx: number) {
+        const [leftRows, rightRows] = keyRowsGenerator(sequence, idx);
         setLeftKeyRows(leftRows);
         setRightKeyRows(rightRows);
+        currentKeyRef.current = sequence[idx];
+        hitRef.current = false; // reset for new unit
+        playMetronome(); // play metronome at start of each unit
+    }
+
+    function nextKey() {
+        if (!hitRef.current) {
+            setMissCount(prev => prev + 1); // count miss if key wasn't hit
+        }
+
+        setSeqIndex(prev => {
+            const newIdx = prev + 1;
+            updateSequence(newIdx);
+            return newIdx;
+        });
     }
 
     React.useEffect(() => {
         const handleKeyUp = (e: KeyboardEvent) => {
-            if(e.key === " "&& status === "afk"){
-                updateSequence(0);
+            if (e.key === " " && status === "afk") {
                 setStatus("playing");
                 setShowHint(false);
+                updateSequence(0);
+                intervalRef.current = setInterval(nextKey, unitTime);
             }
         };
-        window.addEventListener("keyup", handleKeyUp);
-        return () =>{
-            window.removeEventListener("keyup", handleKeyUp);
-        }
 
-    }, []);;
+        window.addEventListener("keyup", handleKeyUp);
+        return () => window.removeEventListener("keyup", handleKeyUp);
+    }, [status]);
 
     function onClicked(key: string, name: string) {
-        // else if(status === "playing"){
-        setSeqIndex((prevIdx) => {
-            
-            const expectedKeyIndx = sequence[prevIdx];
-            let expectedKey = "";
+        if (hitRef.current) return; // only first click per unit
 
-            if (expectedKeyIndx < 4) {
-                if(name !== "left") {
-                    return prevIdx;
-                }
-                expectedKey = leftKeys[expectedKeyIndx];
-            } else {
-                if(name !== "right") {
-                    return prevIdx;
-                }
-                expectedKey = rightKeys[expectedKeyIndx - 4];
-            }
-            // console.log(`Clicked: ${key}, Expected: ${expectedKey}`);
+        const expectedKeyIdx = currentKeyRef.current;
+        let expectedKey = "";
 
-            if (key === expectedKey && status === "playing") {
-                // console.log(name, " changin score")
-                setScore((prevScore) => prevScore + 1);
+        if (expectedKeyIdx < 4) {
+            if (name !== "left") return;
+            expectedKey = leftKeys[expectedKeyIdx];
+        } else {
+            if (name !== "right") return;
+            expectedKey = rightKeys[expectedKeyIdx - 4];
+        }
 
-                const newIdx = prevIdx + 1;
-                // console.log(`Correct key! Sequence index: ${prevIdx} -> ${newIdx}`);
+        if (status !== "playing") return;
 
-                const [leftRows, rightRows] = keyRowsGenerator(sequence, newIdx);
-                setLeftKeyRows(leftRows);
-                setRightKeyRows(rightRows);
+        if (key === expectedKey) {
+            setScore(prev => prev + 1);
+        } else {
+            setMissCount(prev => prev + 1);
+        }
 
-                return newIdx;
-            }
-
-            return prevIdx;
-        });
-        // }
+        hitRef.current = true;
     }
 
     return (
-        <Layout gamePage = {false} loginPage={false} leaderboardsPage={true} profilePage={true}>
-            <div
-                className="relative"
-                style={{ height: "calc(100vh - 4rem)" }}
-            >
+        <Layout gamePage={false} loginPage={false} leaderboardsPage={true} profilePage={true}>
+            <div className="relative" style={{ height: "calc(100vh - 4rem)" }}>
                 {showHint && (
-                <h1 className="flex justify-center items-center absolute text-3xl text-[lightgrey] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    Press "Space" to start!
-                </h1>
+                    <h1 className="flex justify-center items-center absolute text-3xl text-[lightgrey] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                        Press "Space" to start!
+                    </h1>
                 )}
-                {gameOver && <GameOver score={score / 2} />}
+                {gameOver && <GameOver score={score} mode = {"sync"} accuracy={(score/tempo)*100}/>}
                 <div className="flex flex-1 gap-0">
-                <div>
-                    <Hud score={score} state={status} onTimeOut={handleTimeout} />
-                </div>
-                <div className="w-1/2">
-                    <GameControl
-                    onClicked={onClicked}
-                    keyrows={leftKeyRows}
-                    keys={leftKeys}
-                    name="left"
-                    status={status}
-                    sequence={sequence}
-                    />
-                </div>
-                <div className="w-1/2">
-                    <GameControl
-                    onClicked={onClicked}
-                    keyrows={rightKeyRows}
-                    keys={rightKeys}
-                    name="right"
-                    status={status}
-                    sequence={sequence}
-                    />
-                </div>
+                    <div>
+                        <Hud score={score} state={status} onTimeOut={handleTimeout} />
+                    </div>
+                    <div className="w-1/2">
+                        <GameControl
+                            ease={true}
+                            duration={0}
+                            onClicked={onClicked}
+                            keyrows={leftKeyRows}
+                            keys={leftKeys}
+                            name="left"
+                            status={status}
+                            sequence={sequence}
+                        />
+                    </div>
+                    <div className="w-1/2">
+                        <GameControl
+                            ease={true}
+                            duration={0}
+                            onClicked={onClicked}
+                            keyrows={rightKeyRows}
+                            keys={rightKeys}
+                            name="right"
+                            status={status}
+                            sequence={sequence}
+                        />
+                    </div>
                 </div>
             </div>
         </Layout>
