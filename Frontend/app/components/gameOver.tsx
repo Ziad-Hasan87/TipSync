@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 
-export default function GameOver({ score }: { score: number }) {
+export default function GameOver({ score, accuracy=100, mode}: { score: number, accuracy:number, mode:string}) {
   const hasSent = useRef(false);
 
   async function setScore() {
     const token = localStorage.getItem("access_token");
-    const body = { score: score, accuracy: 100, game_mode: "speed" };
+    const body = { score: score, accuracy: accuracy, game_mode: mode };
 
     try {
       const res = await fetch("http://127.0.0.1:8000/scores/", {

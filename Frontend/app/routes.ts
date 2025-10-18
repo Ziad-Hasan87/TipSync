@@ -7,4 +7,5 @@ export default [
     route("/register", "routes/register.tsx"),
     route("/leaderboards", "routes/leaderboards.tsx"),
     route("/profile", "routes/profile.tsx"),
+    route("/gamespeed", "routes/gamespeed.tsx"),
 ] satisfies RouteConfig;

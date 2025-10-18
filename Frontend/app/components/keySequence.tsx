@@ -2,7 +2,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import KeyButton from "./keybutton";
 import type { KeyRow } from "~/types/keys";
 
-export default function KeySequence({ keyrows }: { keyrows: KeyRow[] }) {
+
+
+export default function KeySequence({ keyrows, duration, ease}: { keyrows: KeyRow[], duration: number, ease?:boolean}) {
     return (
         <div className="overflow-hidden h-full flex flex-col justify-end">
             <AnimatePresence initial={false}>
@@ -12,7 +14,7 @@ export default function KeySequence({ keyrows }: { keyrows: KeyRow[] }) {
                         data-row-id={keyrow.index}
                         initial={{ y: "-100%" }}
                         animate={{ y: "0%" }}
-                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        transition= { ease? { duration, ease: "easeInOut"} : {duration}}
                         className="flex justify-center h-25"
                     >
                         {keyrow.keys.map((key, index) => {

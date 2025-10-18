@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Query
 from sqlalchemy.orm import Session
 from utils.db import get_db
 from utils.auth import get_current_user
@@ -10,6 +10,7 @@ score_router = APIRouter(prefix="/scores", tags=["scores"])
 
 @score_router.get("/")
 async def get_user_score(
+    game_mode: str = Query(..., regex="^(speed|sync)$", description="Filter by game mode"),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -22,11 +23,12 @@ async def get_user_score(
 
     scores = (
         db.query(Score)
-        .filter(Score.user_id == user.id)
+        .filter(Score.user_id == user.id, Score.game_mode == game_mode)
         .order_by(Score.score.desc())
         .limit(10)
         .all()
     )
+
     return scores
 
 
