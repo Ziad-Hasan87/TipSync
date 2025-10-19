@@ -42,9 +42,10 @@ export default function GameSync() {
     const [status, setStatus] = React.useState<"playing" | "afk">("afk");
     const [showHint, setShowHint] = React.useState(true);
     const [gameOver, setGameOver] = React.useState(false);
-    const [tempo] = React.useState(90);
+    const [tempo] = React.useState(95);
+    const [accuracy, setAccuracy] =React.useState(0);
     const unitTime = 60000 / tempo;
-
+    const [beatCounter, setBeatCounter] = React.useState(0);
     const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
     const currentKeyRef = React.useRef(0);
     const hitRef = React.useRef(false);
@@ -52,7 +53,7 @@ export default function GameSync() {
     // Create an Audio object for the metronome
     const metronomeAudioRef = React.useRef<HTMLAudioElement | null>(null);
     React.useEffect(() => {
-        metronomeAudioRef.current = new Audio("/sounds/metronome-click.wav"); // replace with your click sound path
+        metronomeAudioRef.current = new Audio("/sounds/metronome-click2.wav"); // replace with your click sound path
     }, []);
 
     function playMetronome() {
@@ -72,9 +73,8 @@ export default function GameSync() {
         const [leftRows, rightRows] = keyRowsGenerator(sequence, idx);
         setLeftKeyRows(leftRows);
         setRightKeyRows(rightRows);
-        currentKeyRef.current = sequence[idx];
-        hitRef.current = false; // reset for new unit
-        playMetronome(); // play metronome at start of each unit
+        currentKeyRef.current = idx>0?sequence[idx-1]:sequence[idx];
+        hitRef.current = false;// play metronome at start of each unit
     }
 
     function nextKey() {
@@ -84,24 +84,65 @@ export default function GameSync() {
 
         setSeqIndex(prev => {
             const newIdx = prev + 1;
+            setBeatCounter(prev=>prev+0.5);
             updateSequence(newIdx);
             return newIdx;
         });
     }
+    React.useEffect(() => {
+        const totalBeats = score + missCount;
+        if (totalBeats === 0) {
+            setAccuracy(0);
+        } else {
+            console.log("beatcounter: ", beatCounter);
+            const acc = (score / beatCounter) * 100;
+            setAccuracy(parseFloat(acc.toFixed(2)));
+        }
+    }, [score, missCount]);
+
+
 
     React.useEffect(() => {
-        const handleKeyUp = (e: KeyboardEvent) => {
-            if (e.key === " " && status === "afk") {
-                setStatus("playing");
-                setShowHint(false);
-                updateSequence(0);
-                intervalRef.current = setInterval(nextKey, unitTime);
-            }
-        };
+    const handleKeyUp = (e: KeyboardEvent) => {
+        if (e.key === " " && status === "afk") {
+            setStatus("playing");
+            setShowHint(false);
 
-        window.addEventListener("keyup", handleKeyUp);
-        return () => window.removeEventListener("keyup", handleKeyUp);
-    }, [status]);
+            const countInBeats = 4;
+            let beatCount = 0;
+
+            // 🔊 Play the first click immediately
+            playMetronome();
+            beatCount++;
+
+            const countInInterval = setInterval(() => {
+                // Play 4 audible beats
+                if (beatCount < countInBeats) {
+                    //playMetronome();
+                }
+
+                beatCount++;
+
+                // Wait for one silent beat before starting
+                if (beatCount > countInBeats) {
+                    clearInterval(countInInterval);
+
+                    // ⏱️ One extra beat delay (silent)
+                    setTimeout(() => {
+                        updateSequence(0);
+                        intervalRef.current = setInterval(nextKey, unitTime);
+                    }, unitTime);
+                }
+            }, unitTime);
+        }
+    };
+
+    window.addEventListener("keyup", handleKeyUp);
+    return () => window.removeEventListener("keyup", handleKeyUp);
+}, [status]);
+
+
+
 
     function onClicked(key: string, name: string) {
         if (hitRef.current) return; // only first click per unit
@@ -136,15 +177,15 @@ export default function GameSync() {
                         Press "Space" to start!
                     </h1>
                 )}
-                {gameOver && <GameOver score={score} mode = {"sync"} accuracy={(score/tempo)*100}/>}
+                {gameOver && <GameOver score={score} mode = {"sync"} accuracy={accuracy}/>}
                 <div className="flex flex-1 gap-0">
                     <div>
-                        <Hud score={score} state={status} onTimeOut={handleTimeout} />
+                        <Hud accuracyFlag={true} accuracy = {accuracy}score={score} state={status} onTimeOut={handleTimeout} />
                     </div>
                     <div className="w-1/2">
                         <GameControl
                             ease={true}
-                            duration={0}
+                            duration={0.2}
                             onClicked={onClicked}
                             keyrows={leftKeyRows}
                             keys={leftKeys}
@@ -156,7 +197,7 @@ export default function GameSync() {
                     <div className="w-1/2">
                         <GameControl
                             ease={true}
-                            duration={0}
+                            duration={0.2}
                             onClicked={onClicked}
                             keyrows={rightKeyRows}
                             keys={rightKeys}

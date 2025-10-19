@@ -17,7 +17,7 @@ export default function GameControl({
     keys: string[], 
     keyrows: KeyRow[],
     name: string, 
-    status: "playing" | "afk",
+    status: "playing" | "afk" | "count-in",
     sequence: number[], 
     ease:boolean,
     duration:number,

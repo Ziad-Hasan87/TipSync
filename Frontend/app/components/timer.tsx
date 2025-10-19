@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Timer({ status, onTimeout, }: { status: "playing" | "afk", onTimeout?: () => void }) {
+export default function Timer({ status, onTimeout, }: { status: "playing" | "afk" | "count-in", onTimeout?: () => void }) {
     const [seconds, setSeconds] = React.useState(0);
     const [milliseconds, setMilliseconds] = React.useState(0);
     const [timeout, setTimeoutState] = React.useState(false);
@@ -11,7 +11,7 @@ export default function Timer({ status, onTimeout, }: { status: "playing" | "afk
         const interval = setInterval(() => {
             setMilliseconds((prev) => {
                 if (prev >= 999) {
-                    setSeconds((s) => s + 1);
+                    setSeconds((s) => s + 0.5);
                     return 0;
                 }
                 return prev + 10;

@@ -126,7 +126,7 @@ export default function GameSpeed() {
                 {gameOver && <GameOver mode = {"speed"} accuracy={100} score={score / 2} />}
                 <div className="flex flex-1 gap-0">
                 <div>
-                    <Hud score={score/2} state={status} onTimeOut={handleTimeout} />
+                    <Hud accuracy={100} accuracyFlag={false} score={score/2} state={status} onTimeOut={handleTimeout} />
                 </div>
                 <div className="w-1/2">
                     <GameControl 
