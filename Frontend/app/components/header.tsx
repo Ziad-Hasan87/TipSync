@@ -17,16 +17,18 @@ export default function Header({
   return (
     <header className="h-16 bg-[rgba(0,0,30,0.7)] flex items-center justify-between px-5">
       {/* Logo */}
-      <h1 className="h-full pl-2 pr-2 orbitron-regular bg-[wheat] text-3xl text-[black] flex items-center justify-center">
+      <button 
+        className="h-full pl-2 pr-2 orbitron-regular bg-[wheat] text-3xl text-[black] flex items-center justify-center cursor-pointer"
+        onClick={()=>window.location.href="/"}>
         TipSync
-      </h1>
+      </button>
 
       {/* Navigation buttons */}
       <div className="flex gap-4">
         {gamePage && (
           <button
             className="text-white py-3 px-3 rounded transition-colors duration-200 cursor-pointer bg-blue-400 hover:bg-white-700 active:bg-white-900"
-            onClick={() => (window.location.href = "/gamesync")}
+            onClick={() => (window.location.href = "/")}
           >
             Play Now!
           </button>

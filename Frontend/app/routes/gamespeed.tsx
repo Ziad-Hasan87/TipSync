@@ -45,6 +45,9 @@ export default function GameSpeed() {
     const [status, setStatus] = React.useState<"playing" | "afk">("afk");
     const [showHint, setShowHint] = React.useState(true);
     const [gameOver, setGameOver] = React.useState(false);
+    const [myKey1, setMyKey1] = React.useState(false);
+    const [myKey2, setMyKey2] = React.useState(false);
+    const [active, setActive] = React.useState(10);
 
     function handleTimeout() {
         setStatus("afk"); // or whatever you want to do when the timer ends
@@ -52,6 +55,14 @@ export default function GameSpeed() {
         setGameOver(true);
     }
 
+    React.useEffect(() => {
+            const currentKey = sequence[seqIdx];
+            setActive(currentKey % 4);
+            setMyKey1(currentKey < 4);
+            setMyKey2(currentKey >= 4);
+            //console.log("Keyboard to click: ", myKey1 ? "keyboard1":"keyboard2", " Key no to click: ", active);
+        },[seqIdx]);
+    
     function updateSequence(indx: number) {
         const [leftRows, rightRows] = keyRowsGenerator(sequence, indx);
         setLeftKeyRows(leftRows);
@@ -130,6 +141,8 @@ export default function GameSpeed() {
                 </div>
                 <div className="w-1/2">
                     <GameControl 
+                    active={active}
+                    myKey={myKey1}
                     ease = {true}
                     duration={0.2}
                     onClicked={onClicked}
@@ -142,6 +155,8 @@ export default function GameSpeed() {
                 </div>
                 <div className="w-1/2">
                     <GameControl
+                    active={active}
+                    myKey={myKey2}
                     ease = {true}
                     duration={0.2}
                     onClicked={onClicked}

@@ -9,7 +9,9 @@ export default function GameControl({
     keyrows, 
     name, 
     status,
+    myKey,
     sequence,
+    active,
     ease,
     duration,
     onClicked
@@ -19,6 +21,8 @@ export default function GameControl({
     name: string, 
     status: "playing" | "afk" | "count-in",
     sequence: number[], 
+    active: number,
+    myKey:boolean,
     ease:boolean,
     duration:number,
     onClicked?: (key: string, name: string) => void 
@@ -35,8 +39,8 @@ export default function GameControl({
             <div className="absolute bottom-55 w-1/2 flex items-center justify-center p-4 shadow-md z-10">    
                 <KeySequence duration={duration} keyrows={keyrows} />
             </div>
-            <div className="absolute bottom-35 bg-[wheat] w-1/2 flex items-center justify-center z-50">
-                <KeyBoard keys={keys} onClicked={onClicked} name={name} />
+            <div className="absolute bottom-35 bg-[darkcyan] w-1/2 flex items-center justify-center z-50">
+                <KeyBoard myKey={myKey} active={active} keys={keys} onClicked={onClicked} name={name} />
             </div>
         </div>
     )

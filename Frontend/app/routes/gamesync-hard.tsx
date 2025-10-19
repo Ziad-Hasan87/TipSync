@@ -41,7 +41,7 @@ export default function GameSync() {
     const [status, setStatus] = React.useState<"playing" | "afk" | "count-in">("afk");
     const [showHint, setShowHint] = React.useState(true);
     const [gameOver, setGameOver] = React.useState(false);
-    const [tempo] = React.useState(95);
+    const [tempo] = React.useState(120);
     const [accuracy, setAccuracy] = React.useState(0);
     const unitTime = 60000 / tempo;
     const [beatCounter, setBeatCounter] = React.useState(0);
@@ -54,7 +54,7 @@ export default function GameSync() {
     const [active, setActive] = React.useState(10);
 
     React.useEffect(() => {
-        metronomeAudioRef.current = new Audio("/sounds/metronome-click2.mp3");
+        metronomeAudioRef.current = new Audio("/sounds/hard.mp3");
     }, []);
 
     React.useEffect(() => {
