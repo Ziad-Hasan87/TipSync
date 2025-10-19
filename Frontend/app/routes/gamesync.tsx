@@ -53,7 +53,7 @@ export default function GameSync() {
     // Create an Audio object for the metronome
     const metronomeAudioRef = React.useRef<HTMLAudioElement | null>(null);
     React.useEffect(() => {
-        metronomeAudioRef.current = new Audio("/sounds/metronome-click2.wav"); // replace with your click sound path
+        metronomeAudioRef.current = new Audio("/sounds/metronome-click2.mp3"); // replace with your click sound path
     }, []);
 
     function playMetronome() {
