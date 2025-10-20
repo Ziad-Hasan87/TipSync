@@ -1,5 +1,10 @@
 import Layout from "~/components/layout";
+import React from "react"
+
 export default function Difficulty(){
+    React.useEffect(()=>{
+        document.title = "Choose Difficulty";
+    },[])
 
     return(
         <Layout loginPage={false} profilePage={true} leaderboardsPage={true} gamePage={false}>

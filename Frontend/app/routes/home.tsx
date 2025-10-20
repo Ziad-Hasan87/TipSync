@@ -3,7 +3,7 @@ import Layout  from "~/components/layout";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "TipSync"},
+    { title: "Welcome to TipSync"},
     { name: "description", content: "Welcome to TipSync!" },
   ];
 }

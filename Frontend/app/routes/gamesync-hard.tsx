@@ -54,6 +54,7 @@ export default function GameSync() {
     const [active, setActive] = React.useState(10);
 
     React.useEffect(() => {
+        document.title = "GameSync - Hard Mode";
         metronomeAudioRef.current = new Audio("/sounds/hard.mp3");
     }, []);
 

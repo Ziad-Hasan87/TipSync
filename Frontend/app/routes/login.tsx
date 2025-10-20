@@ -1,7 +1,11 @@
 import toast from "react-hot-toast";
 import Layout from "~/components/layout";
+import React from "react";
 
 export default function Login() {
+    React.useEffect(()=>{
+        document.title = "Log in";
+    },[])
     async function initiateLogin(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault(); // prevent page reload
         const formData = new FormData(event.currentTarget);

@@ -19,6 +19,9 @@ export default function Leaderboards() {
   const [selectedMode, setSelectedMode] = React.useState("speed");
   const [selectedDifficulty, setSelectedDifficulty] = React.useState("easy"); // ✅ fixed default
 
+  useEffect(()=>{
+    document.title = "Global Leaderboards";
+  },[])
   useEffect(() => {
     if(selectedMode === "speed") setSelectedDifficulty("easy");
     async function fetchLeaderboard() {

@@ -17,6 +17,10 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<"speed" | "sync">("speed");
   const [selectedDifficulty, setSelectedDifficulty] = useState<"easy" | "hard">("easy");
+  
+  useEffect(()=>{
+    document.title = "Profile";
+  },[])
 
   async function fetchTopScore(mode: "speed" | "sync", difficulty: "easy" | "hard") {
     try {

@@ -54,6 +54,7 @@ export default function GameSync() {
     const [active, setActive] = React.useState(10);
 
     React.useEffect(() => {
+        document.title = "GameSync - Easy Mode";
         metronomeAudioRef.current = new Audio("/sounds/metronome-click2.mp3");
     }, []);
 

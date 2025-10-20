@@ -70,6 +70,7 @@ export default function GameSpeed() {
     }
 
     React.useEffect(() => {
+        document.title = "GameSpeed";
         const handleKeyUp = (e: KeyboardEvent) => {
             if(e.key === " "&& status === "afk"){
                 updateSequence(0);
