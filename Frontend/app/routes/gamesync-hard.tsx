@@ -55,7 +55,7 @@ export default function GameSync() {
 
     React.useEffect(() => {
         document.title = "GameSync - Hard Mode";
-        metronomeAudioRef.current = new Audio("/sounds/hard.mp3");
+        metronomeAudioRef.current = new Audio("/sounds/metronome.wav");
     }, []);
 
     React.useEffect(() => {
@@ -114,6 +114,7 @@ export default function GameSync() {
         setRightKeyRows(rightRows);
         currentKeyRef.current = idx > 0 ? sequence[idx] : sequence[idx];
         hitRef.current = false;
+        playMetronome();
     }
 
     function nextKey() {
@@ -150,6 +151,7 @@ export default function GameSync() {
 
                 const countInInterval = setInterval(() => {
                     beatCount++;
+                    playMetronome();
 
                     if (beatCount >= countInBeats) {
                         clearInterval(countInInterval);
@@ -160,7 +162,6 @@ export default function GameSync() {
                         }, unitTime);
                     }
                 }, unitTime);
-                playMetronome();
             }
         };
 

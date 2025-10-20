@@ -25,7 +25,7 @@ export default function Login() {
                 const data = await res.json();
                 localStorage.setItem("access_token", data.access_token);
                 toast.success(data.message);
-                window.location.href = "/gamesync";
+                window.location.href = "/";
             }
             else {
                 toast.error("Login failed. Please check your credentials.");
