@@ -201,7 +201,7 @@ export default function GameSync() {
                         Press "Space" to start!
                     </h1>
                 )}
-                {gameOver && <GameOver score={score} mode={"sync"} accuracy={accuracy} />}
+                {gameOver && <GameOver difficulty={"easy"} score={score} mode={"sync"} accuracy={accuracy} />}
                 <div className="flex flex-1 gap-0">
                     <div>
                         <Hud

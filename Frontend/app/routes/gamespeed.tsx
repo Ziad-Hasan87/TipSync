@@ -134,7 +134,7 @@ export default function GameSpeed() {
                     Press "Space" to start!
                 </h1>
                 )}
-                {gameOver && <GameOver mode = {"speed"} accuracy={100} score={score / 2} />}
+                {gameOver && <GameOver mode = {"speed"} accuracy={100} score={score / 2} difficulty={"easy"}/>}
                 <div className="flex flex-1 gap-0">
                 <div>
                     <Hud accuracy={100} accuracyFlag={false} score={score/2} state={status} onTimeOut={handleTimeout} />

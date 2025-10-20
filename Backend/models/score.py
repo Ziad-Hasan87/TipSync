@@ -9,4 +9,5 @@ class Score(Base):
     score = sa.Column(sa.Float, nullable=False)
     accuracy = sa.Column(sa.Float, nullable=False)
     game_mode = sa.Column(sa.String, nullable=False)
+    difficulty = sa.Column(sa.String, nullable=False, server_default="easy")
     timestamp = sa.Column(sa.DateTime, server_default=sa.func.now(), nullable=False)
