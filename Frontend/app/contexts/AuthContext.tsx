@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
 import toast from "react-hot-toast";
+import { BACKENDAPI } from "~/utils";
 
 // Define types
 interface User {
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     const fetchMe = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/auth/me", {
+        const res = await fetch(`${BACKENDAPI}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Unauthorized");
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // fetch current user after login
     const fetchMeAfterLogin = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/auth/me", {
+        const res = await fetch(`${BACKENDAPI}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error("Unauthorized");

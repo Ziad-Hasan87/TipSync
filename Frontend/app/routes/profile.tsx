@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "~/components/layout";
+import { BACKENDAPI } from "~/utils";
 
 interface TopScoreEntry {
   id: number;
@@ -35,7 +36,7 @@ export default function Profile() {
       }
 
       const res = await fetch(
-        `http://127.0.0.1:8000/scores/?game_mode=${mode}&difficulty=${difficulty}`,
+        `${BACKENDAPI}/scores/?game_mode=${mode}&difficulty=${difficulty}`,
         {
           headers: {
             accept: "application/json",

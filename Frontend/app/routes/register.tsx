@@ -1,6 +1,7 @@
 import Layout from "~/components/layout";
 import toast from "react-hot-toast";
 import React from "react";
+import { BACKENDAPI } from "~/utils";
 
 
 export default function Register() {
@@ -18,7 +19,7 @@ export default function Register() {
             return;
         }
         try {
-            const res = await fetch("http://127.0.0.1:8000/auth/register", {
+            const res = await fetch(`${BACKENDAPI}/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
