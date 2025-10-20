@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Difficulty from "~/routes/difficulty";
+import { BACKENDAPI } from "~/utils";
 
 export default function GameOver({ score, accuracy=100, mode, difficulty}: { score: number, accuracy:number, mode:string, difficulty:string}) {
   const hasSent = useRef(false);
@@ -9,7 +10,7 @@ export default function GameOver({ score, accuracy=100, mode, difficulty}: { sco
     const body = { score: score, accuracy: accuracy, game_mode: mode,  difficulty:difficulty};
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/scores/", {
+      const res = await fetch(`${BACKENDAPI}/scores/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

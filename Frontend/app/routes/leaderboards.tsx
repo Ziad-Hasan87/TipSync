@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "~/components/layout";
 import React from "react";
+import { BACKENDAPI } from "~/utils";
 
 interface LeaderboardEntry {
   id: number;
@@ -30,7 +31,7 @@ export default function Leaderboards() {
 
       try {
         const res = await fetch(
-          `http://127.0.0.1:8000/scores/leaderboard?game_mode=${selectedMode}&difficulty=${selectedDifficulty}`,
+          `${BACKENDAPI}/scores/leaderboard?game_mode=${selectedMode}&difficulty=${selectedDifficulty}`,
           {
             headers: {
               accept: "application/json",

@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import Layout from "~/components/layout";
 import React from "react";
+import { BACKENDAPI } from "~/utils";
 
 export default function Login() {
     React.useEffect(()=>{
@@ -17,7 +18,7 @@ export default function Login() {
             return;
         }
         try {
-            const res = await fetch("http://127.0.0.1:8000/auth/login",{
+            const res = await fetch(`${BACKENDAPI}/auth/login`,{
                 method: "POST",
                 body: formData,
             });
