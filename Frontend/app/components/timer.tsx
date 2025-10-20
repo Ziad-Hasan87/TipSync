@@ -1,17 +1,28 @@
 import React from "react";
 
-export default function Timer({ status, onTimeout, }: { status: "playing" | "afk", onTimeout?: () => void }) {
+export default function Timer({
+    status,
+    onTimeout,
+}: {
+    status: "playing" | "afk" | "count-in";
+    onTimeout?: () => void;
+}) {
     const [seconds, setSeconds] = React.useState(0);
     const [milliseconds, setMilliseconds] = React.useState(0);
-    const [timeout, setTimeoutState] = React.useState(false);
 
     React.useEffect(() => {
-        if (status !== "playing" || seconds >= 60) return;
+        if (status === "afk" || status === "count-in") {
+            setSeconds(0);
+            setMilliseconds(0);
+            return;
+        }
+
+        if (status !== "playing") return;
 
         const interval = setInterval(() => {
             setMilliseconds((prev) => {
-                if (prev >= 999) {
-                    setSeconds((s) => s + 1);
+                if (prev >= 990) {
+                    setSeconds((s) => s + 0.5);
                     return 0;
                 }
                 return prev + 10;
@@ -19,13 +30,11 @@ export default function Timer({ status, onTimeout, }: { status: "playing" | "afk
         }, 10);
 
         return () => clearInterval(interval);
-    }, [status, seconds]);
+    }, [status]);
 
     React.useEffect(() => {
         if (seconds >= 60) {
-            setMilliseconds(0);
-            setTimeoutState(true);
-            if(onTimeout) onTimeout();
+            if (onTimeout) onTimeout();
         }
     }, [seconds, onTimeout]);
 

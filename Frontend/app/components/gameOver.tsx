@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import Difficulty from "~/routes/difficulty";
 
-export default function GameOver({ score }: { score: number }) {
+export default function GameOver({ score, accuracy=100, mode, difficulty}: { score: number, accuracy:number, mode:string, difficulty:string}) {
+  const hasSent = useRef(false);
+
   async function setScore() {
     const token = localStorage.getItem("access_token");
-    const body = { score: score, accuracy: 100, game_mode: "speed" };
+    const body = { score: score, accuracy: accuracy, game_mode: mode,  difficulty:difficulty};
 
     try {
       const res = await fetch("http://127.0.0.1:8000/scores/", {
@@ -18,7 +21,7 @@ export default function GameOver({ score }: { score: number }) {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("✅ Score submitted:", data);
+        console.log("Score submitted:", data);
       } else {
         const err = await res.text();
         console.error("Failed to submit score:", err);
@@ -28,9 +31,11 @@ export default function GameOver({ score }: { score: number }) {
     }
   }
 
-  // Automatically send score when the component mounts
   useEffect(() => {
-    setScore();
+    if (!hasSent.current) {
+      hasSent.current = true;
+      setScore();
+    }
   }, []);
 
   return (

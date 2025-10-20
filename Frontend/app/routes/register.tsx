@@ -1,8 +1,12 @@
 import Layout from "~/components/layout";
 import toast from "react-hot-toast";
+import React from "react";
 
 
 export default function Register() {
+    React.useEffect(()=>{
+        document.title = "Sign up or register";
+    },[])
     async function initiateRegister(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault(); // prevent page reload
         const formData = new FormData(event.currentTarget);
